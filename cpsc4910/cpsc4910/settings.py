@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STAT=os.path.join(BASE_DIR, 'static')
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,12 +26,13 @@ SECRET_KEY = 'h=wyslsqh#5kd6ekk7vgrr0maav2jf7a0qlhqxm@5627)9d_+0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['104.48.40.66', 'localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'project.apps.ProjectConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -73,12 +75,24 @@ WSGI_APPLICATION = 'cpsc4910.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if 'notadatabase.cgdotcsuggkr.us-east-1.rds.amazonaws.com' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ['test'],
+            'USER': os.environ['admin'],
+            'PASSWORD': os.environ['cpsc4910'],
+            'HOST': os.environ['notadatabase.cgdotcsuggkr.us-east-1.rds.amazonaws.com'],
+            'PORT': os.environ['3306'],
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlit3'),
+        }
+    }
 
 
 # Password validation
@@ -118,3 +132,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    STAT,
+]
